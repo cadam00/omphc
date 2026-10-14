@@ -1,0 +1,19 @@
+update.skel <- function(skel, tol = 0.01) {
+  
+  G <- skel$G
+  p <- length(skel$Rho)
+  tol <- log(tol)
+  
+  for ( i in 1:p ) {
+    a <- skel$Rho[[ i ]][-1]          ## drop the "0" entry
+    if ( length(a) == 0 )  next
+    id <- which( a >= tol )
+    if ( length(id) > 0 ) {
+      b <- as.numeric( names(a) )[ id[1]:length(a) ]
+      G[i, b] <- 0
+    }
+  }
+  
+  skel$G <- G * t(G)                  ## keep symmetric edges only
+  skel
+}

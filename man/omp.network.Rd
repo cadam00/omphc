@@ -93,6 +93,6 @@ R implementation and documentation: Michail Tsagris \email{mtsagris@uoc.gr}.
 m <- rbn2(1000, p = 50, nei = 5)
 G <- m$G
 x <- m$x
-a <- omp.network(x, tol = 0.01)
+a <- omp.network(x, tol = 0.1)
 }
 
