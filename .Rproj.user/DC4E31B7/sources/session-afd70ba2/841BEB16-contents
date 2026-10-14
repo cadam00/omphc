@@ -1,0 +1,108 @@
+\name{omp.bn}
+\alias{omp.bn}
+\title{
+The OMPHC and OMPTABU Bayesian network learning algorithms
+}
+
+\description{
+The OMPHC and OMPTABU Bayesian network learning algorithms.
+}
+
+\usage{
+omp.bn(x, skel = NULL, R = NULL, method = "pvalue", tol = 0.05, algo = "hc",
+tabu = 10, restart = 10, score = "bic-g", blacklist = NULL, whitelist = NULL)
+}
+
+\arguments{
+\item{x}{
+A numerical matrix with the variables. No missing data are allowed.
+}
+\item{skel}{
+If you have the output of the skeleton phase, the output from the function
+\code{\link{omp.network}} plug it here.
+This can save time.
+}
+\item{R}{
+If the correlation matrix is available, pass it here.
+}
+\item{method}{
+The method to proceed with the OMP, p-value based, BIC based, or adjusted R-square based.
+}
+\item{tol}{
+The tolerance value to terminate the OMP. The significance level, a value for the BIC difference,
+or a percentage for the adjusted R-square.
+}
+\item{algo}{
+The scoring algorithm, either "hc" or "tabu"
+}
+\item{tabu}{
+An integer, the length of the tabu list used in the tabu function.
+}
+\item{restart}{
+An integer, the number of random restarts.
+}
+\item{score}{
+A character string, the label of the network score to be used in the algorithm. If none is specified,
+the default score is the Bayesian Information Criterion for continuous data sets.
+The available score for continuous variables are: "bic-g" (default), "loglik-g", "aic-g", "bic-g" or "bge".
+}
+\item{blacklist}{
+A data frame with two columns (optionally labeled "from" and "to"), containing a set of arcs not to
+be included in the graph.
+}
+\item{whitelist}{
+A data frame with two columns (optionally labeled "from" and "to"), containing a set of arcs to be
+included in the graph.
+}
+}
+
+\details{
+The OMPHC or OMPTABU algorithm is implemented. The OMP algorithm (Borboudakis and Tsamardinos, 2019),
+without the backward phase, is implemented during the skeleton identification phase.
+Next, the Hill Climbing greedy search or the Tabu search is employed to score the network.
+}
+
+\value{
+A list including:
+\item{ini}{
+A list including the output of the \code{ \link{omp.network} } function.
+}
+\item{dag}{
+A "bn" class output. A list including the outcome of the Hill-Climbing or the Tabu search phase.
+See the package "bnlearn" for more details.
+}
+\item{scoring}{
+The score value.
+}
+\item{runtime}{
+The duration of the algorithm.
+}
+}
+
+\references{
+Tsagris M. (2022). The FEDHC Bayesian Network Learning Algorithm. Mathematics, 10(15): 2604.
+
+Tsamardinos I., Brown E.L. and Aliferis F.C. (2006). The max-min hill-climbing Bayesian network
+structure learning algorithm. Machine Learning, 65(1): 31--78.
+}
+
+\author{
+Michail Tsagris.
+
+R implementation and documentation: Michail Tsagris \email{mtsagris@uoc.gr}.
+}
+
+%\note{
+%%  ~~further notes~~
+%}
+\seealso{
+\code{ \link{omp.network}
+}
+}
+
+\examples{
+m <- rbn2(1000, p = 50, nei = 5)
+G <- m$G
+x <- m$x
+a <- omp.bn(x, tol = 0.01)
+}
