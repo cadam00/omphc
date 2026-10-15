@@ -1,0 +1,5 @@
+m <- rbn2(1000, p = 50, nei = 5)
+G <- m$G
+x <- m$x
+a1 <- omp.network(x, method = "BIC", tol = 2)
+a2 <- omp.network(x, method = "BIC", tol = 4)

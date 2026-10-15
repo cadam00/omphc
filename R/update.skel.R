@@ -3,6 +3,7 @@ update.skel <- function(skel, method = "pvalue", tol = 0.01) {
   p <- length(skel$Rho)
   G <- matrix(0, p, p)
   colnames(G) <- rownames(G) <- colnames(skel$G)
+
   if ( method == "pvalue" ) {
     tol <- log(tol)
     for ( i in 1:p ) {
@@ -15,10 +16,11 @@ update.skel <- function(skel, method = "pvalue", tol = 0.01) {
       } else  sel <- as.numeric( names(id) )
       G[i, sel] <- 1
     }
+
   } else {
     for ( i in 1:p ) {
-      a <- skel$Rho[[ i ]][-1]
-      id <- a > tol
+      a <- skel$Rho[[ i ]]
+      id <- abs( diff(a) ) > tol
       b <- match(FALSE, id) - 1
       if ( !is.na(b) ) {
         sel <- as.numeric( names(id) )[1:b]
