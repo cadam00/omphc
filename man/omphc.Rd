@@ -85,8 +85,6 @@ Tsagris M., Papadovasilakis Z., Lakiotaki K. and Tsamardinos I. (2022). The \eqn
 Algorithm for Feature Selection With Application to Gene Expression Data.
 IEEE/ACM Transactions on Computational Biology and Bioinformatics, 19(2): 1214--1224.
 
-Tsagris M. (2022). The FEDHC Bayesian Network Learning Algorithm. Mathematics, 10(15): 2604.
-
 Tsamardinos I., Brown E.L. and Aliferis F.C. (2006). The max-min hill-climbing Bayesian network
 structure learning algorithm. Machine Learning, 65(1): 31--78.
 

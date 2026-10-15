@@ -14,7 +14,7 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
   if ( is.null(R) ) {
     xx <- crossprod(x)
     R <- xx / (n - 1)
-  }
+  } else  xx <- R * (n - 1)
   diag(R) <- 0
   ini.sel <- Rfast::colMaxs( abs(R) )
 
