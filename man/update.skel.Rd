@@ -14,7 +14,7 @@ update.skel(skel, method = "pvalue", tol = 0.01)
 
 \arguments{
 \item{skel}{
-The output of the function \code{\link{op.network}}.
+The output of the function \code{\link{omp.network}}.
 }
 \item{method}{
 The method used to construct the skeleton, p-value based ("pvalue"), BIC based ("BIC"),
