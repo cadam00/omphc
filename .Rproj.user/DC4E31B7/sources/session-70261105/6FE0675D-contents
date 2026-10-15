@@ -22,7 +22,8 @@ the numbers must start from 0. No missing data are allowed.
 If the correlation matrix is available, pass it here.
 }
 \item{method}{
-The method to proceed with the OMP, p-value based ("pvalue"), BIC based ("BIC"), or adjusted R-square ("ar2") based.
+The method to proceed with the OMP, p-value based ("pvalue"), BIC based ("BIC"), or adjusted R-square
+("ar2") based.
 }
 \item{tol}{
 The tolerance value to terminate the OMP. The significance level, a value for the BIC difference,
