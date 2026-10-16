@@ -2,8 +2,7 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
 
   runtime <- proc.time()
   dm <- dim(x)
-  n <- dm[1]
-  d <- dm[2]
+  n <- dm[1]   ;   d <- dm[2]
   nama <- colnames(x)
   if ( is.null( nama ) )  nama <- paste("X", 1:d, sep = "")
   G <- matrix(0, d, d)
@@ -24,8 +23,6 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
     for ( j in 1:d ) {
       rho <- 0
       ind <- 1:d
-      #epp <- which( G[1:c(j-1), j] != 1 )
-      #if ( length(epp) > 0 )   ind[epp] <- 0
       y <- x[, j]
       ind[j] <- 0
       sel <- ini.sel[j]
