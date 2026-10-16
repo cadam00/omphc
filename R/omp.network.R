@@ -24,6 +24,8 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
     for ( j in 1:d ) {
       rho <- 0
       ind <- 1:d
+      #epp <- which( G[1:c(j-1), j] != 1 )
+      #if ( length(epp) > 0 )   ind[epp] <- 0
       y <- x[, j]
       ind[j] <- 0
       sel <- ini.sel[j]
@@ -36,7 +38,7 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       r <- R[j, ]
       i <- 2
 
-      while ( rho[i] < logalpha & i < n) {
+      while ( rho[i] < logalpha  &  i < n ) {
         i <- i + 1
         r[sela] <- 0
         r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
@@ -45,7 +47,7 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
         sse1 <- sse2
         be <- try( solve( xx[sela, sela], xx[sela, j] ), silent = TRUE )
         if ( identical(class(be), "try-error") ) {
-          rho[i] <- rho[i - 1]
+          rho[i] <- 0
         } else {
           res <- y - x[, sela] %*% be
           sse2 <- sum(res^2)
@@ -77,7 +79,7 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       r <- R[j, ]
       i <- 2
 
-      while (rho[i - 1] - rho[i] > tol & i < n) {
+      while ( rho[i - 1] - rho[i] > tol  &  i < n ) {
         i <- i + 1
         r[sela] <- 0
         r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
@@ -115,7 +117,7 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       r <- R[j, ]
       i <- 2
 
-      while (rho[i] - rho[i - 1] > tol & i < n) {
+      while ( rho[i] - rho[i - 1] > tol  &  i < n ) {
         i <- i + 1
         r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
         r[sela] <- 0
