@@ -1,4 +1,4 @@
-omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
+omp.network2 <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
 
   runtime <- proc.time()
   dm <- dim(x)
@@ -34,11 +34,14 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       ind[sela] <- 0
       r <- R[j, ]
       i <- 2
+      be <- R[sela, j]
 
       while ( rho[i] < logalpha  &  i < n ) {
         i <- i + 1
         r[sela] <- 0
-        r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+        #r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+        idx <- ind[ind > 0]
+        r[idx] <- xx[idx, j] - xx[idx, sela, drop = FALSE] %*% be
         sel <- which.max( abs(r) )
         sela <- c(sela, sel)
         sse1 <- sse2
@@ -75,11 +78,14 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       ind[sela] <- 0
       r <- R[j, ]
       i <- 2
+      be <- R[sela, j]
 
       while ( rho[i - 1] - rho[i] > tol  &  i < n ) {
         i <- i + 1
         r[sela] <- 0
-        r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+        #r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+        idx <- ind[ind > 0]
+        r[idx] <- xx[idx, j] - xx[idx, sela, drop = FALSE] %*% be
         sel <- which.max( abs(r) )
         sela <- c(sela, sel)
         be <- try( solve( xx[sela, sela], xx[sela, j] ), silent = TRUE )
@@ -87,7 +93,7 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
           rho[i] <- rho[i - 1]
         } else {
           res <- y - x[, sela] %*% be
-          rho[i] <- n * log(sum(res^2)/n) + (i + 1) * logn
+          rho[i] <- n * log( sum(res^2)/n ) + (i + 1) * logn
         }
         ind[sela] <- 0
       } ##  end while (rho[i - 1] - rho[i] > tol & i < n) {
@@ -113,10 +119,13 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       ind[sela] <- 0
       r <- R[j, ]
       i <- 2
+      be <- R[sela, j]
 
       while ( rho[i] - rho[i - 1] > tol  &  i < n ) {
         i <- i + 1
-        r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+        #r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+        idx <- ind[ind > 0]
+        r[idx] <- xx[idx, j] - xx[idx, sela, drop = FALSE] %*% be
         r[sela] <- 0
         sel <- which.max(abs(r))
         sela <- c(sela, sel)

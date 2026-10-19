@@ -2,7 +2,7 @@
 
 importFrom("bnlearn", hc, tabu, score, graphviz.plot, amat)
 importFrom("pchc", rbn, rbn2, rbn3)
-importFrom("Rfast", standardise, colMaxs, eachcol.apply)
+importFrom("Rfast", standardise, colMaxs)
 importFrom("stats", pf, cor)
 
 exportPattern("^[[:alpha:]]+")
