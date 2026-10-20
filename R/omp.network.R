@@ -38,7 +38,8 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
     #   ind[sela] <- 0
     #   r <- R[j, ]
     #   i <- 2
-    #
+    #   be <- R[sela, j]
+	#
     #   while ( rho[i] < logalpha  &  i < n ) {
     #     i <- i + 1
     #     r[sela] <- 0
