@@ -1,4 +1,4 @@
-omp.network2 <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
+omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
 
   runtime <- proc.time()
   dm <- dim(x)
@@ -10,7 +10,8 @@ omp.network2 <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
   Rho <- sapply(nama, function(x) NULL)
 
   x <- Rfast::standardise(x)
-  if ( is.null(R) ) {
+  use_gram <- is.null(R)
+  if ( use_gram ) {
     xx <- crossprod(x)
     R <- xx / (n - 1)
   } else  xx <- R * (n - 1)
@@ -20,47 +21,52 @@ omp.network2 <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
   ######## Network construction based on p-values
   if ( method == "pvalue" ) {
     logalpha <- log(tol)
-    for ( j in 1:d ) {
-      rho <- 0
-      ind <- 1:d
-      y <- x[, j]
-      ind[j] <- 0
-      sel <- ini.sel[j]
-      sela <- sel
-      res <- y - x[, sela] * R[sela, j]
-      sse2 <- sum(res^2)
-      stat <- ( n - 1 - sse2 )/sse2 * ( n - length(sela) - 1 )   ## ( sum(res1^2) - sum(res2^2) ) / ( sum(res2^2) / ( n - length(sela) ) )   stat
-      rho[2] <- pf(stat, 1, n - length(sela) - 1 , lower.tail = FALSE, log.p = TRUE)
-      ind[sela] <- 0
-      r <- R[j, ]
-      i <- 2
-      be <- R[sela, j]
 
-      while ( rho[i] < logalpha  &  i < n ) {
-        i <- i + 1
-        r[sela] <- 0
-        #r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
-        idx <- ind[ind > 0]
-        r[idx] <- xx[idx, j] - xx[idx, sela, drop = FALSE] %*% be
-        sel <- which.max( abs(r) )
-        sela <- c(sela, sel)
-        sse1 <- sse2
-        be <- try( solve( xx[sela, sela], xx[sela, j] ), silent = TRUE )
-        if ( identical(class(be), "try-error") ) {
-          rho[i] <- 0
-        } else {
-          res <- y - x[, sela] %*% be
-          sse2 <- sum(res^2)
-          stat <- ( sse1 - sse2 ) / sse2 * ( n - length(sela) - 1)
-          rho[i] <- pf(stat, 1, n - length(sela) - 1, lower.tail = FALSE, log.p = TRUE)
-        }
-        ind[sela] <- 0
-      }
-      len <- length(sela)
-      Rho[[ j ]] <- rho[1:len]
-      names(Rho[[ j ]]) <- c(0, sela[-len] )
-      G[j, sela[-len]] <- 1
-    }  ## end for ( j in 1:d ) {
+    ## In-place computation of G and Rho
+    forward_loop_cpp(
+      x, R, xx, ini.sel,
+      G, Rho,
+      logalpha, use_gram
+    )
+
+    # for ( j in 1:d ) {
+    #   rho <- 0
+    #   ind <- 1:d
+    #   y <- x[, j]
+    #   ind[j] <- 0
+    #   sel <- ini.sel[j]
+    #   sela <- sel
+    #   res <- y - x[, sela] * R[sela, j]
+    #   sse2 <- sum(res^2)
+    #   stat <- ( n - 1 - sse2 )/sse2 * ( n - length(sela) - 1 )   ## ( sum(res1^2) - sum(res2^2) ) / ( sum(res2^2) / ( n - length(sela) ) )   stat
+    #   rho[2] <- pf(stat, 1, n - length(sela) - 1 , lower.tail = FALSE, log.p = TRUE)
+    #   ind[sela] <- 0
+    #   r <- R[j, ]
+    #   i <- 2
+    #
+    #   while ( rho[i] < logalpha  &  i < n ) {
+    #     i <- i + 1
+    #     r[sela] <- 0
+    #     r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+    #     sel <- which.max( abs(r) )
+    #     sela <- c(sela, sel)
+    #     sse1 <- sse2
+    #     be <- try( solve( xx[sela, sela], xx[sela, j] ), silent = TRUE )
+    #     if ( identical(class(be), "try-error") ) {
+    #       rho[i] <- 0
+    #     } else {
+    #       res <- y - x[, sela] %*% be
+    #       sse2 <- sum(res^2)
+    #       stat <- ( sse1 - sse2 ) / sse2 * ( n - length(sela) - 1)
+    #       rho[i] <- pf(stat, 1, n - length(sela) - 1, lower.tail = FALSE, log.p = TRUE)
+    #     }
+    #     ind[sela] <- 0
+    #   }
+    #   len <- length(sela)
+    #   Rho[[ j ]] <- rho[1:len]
+    #   names(Rho[[ j ]]) <- c(0, sela[-len] )
+    #   G[j, sela[-len]] <- 1
+    # }  ## end for ( j in 1:d ) {
 
     ######## Network construction based on BIC
   } else if ( method == "BIC" ) {
@@ -78,14 +84,11 @@ omp.network2 <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       ind[sela] <- 0
       r <- R[j, ]
       i <- 2
-      be <- R[sela, j]
 
       while ( rho[i - 1] - rho[i] > tol  &  i < n ) {
         i <- i + 1
         r[sela] <- 0
-        #r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
-        idx <- ind[ind > 0]
-        r[idx] <- xx[idx, j] - xx[idx, sela, drop = FALSE] %*% be
+        r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
         sel <- which.max( abs(r) )
         sela <- c(sela, sel)
         be <- try( solve( xx[sela, sela], xx[sela, j] ), silent = TRUE )
@@ -93,7 +96,7 @@ omp.network2 <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
           rho[i] <- rho[i - 1]
         } else {
           res <- y - x[, sela] %*% be
-          rho[i] <- n * log( sum(res^2)/n ) + (i + 1) * logn
+          rho[i] <- n * log(sum(res^2)/n) + (i + 1) * logn
         }
         ind[sela] <- 0
       } ##  end while (rho[i - 1] - rho[i] > tol & i < n) {
@@ -119,13 +122,10 @@ omp.network2 <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       ind[sela] <- 0
       r <- R[j, ]
       i <- 2
-      be <- R[sela, j]
 
       while ( rho[i] - rho[i - 1] > tol  &  i < n ) {
         i <- i + 1
-        #r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
-        idx <- ind[ind > 0]
-        r[idx] <- xx[idx, j] - xx[idx, sela, drop = FALSE] %*% be
+        r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
         r[sela] <- 0
         sel <- which.max(abs(r))
         sela <- c(sela, sel)
