@@ -21,13 +21,8 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
   ######## Network construction based on p-values
   if ( method == "pvalue" ) {
     logalpha <- log(tol)
-
     ## In-place computation of G and Rho
-    forward_loop_cpp(
-      x, R, xx, ini.sel,
-      G, Rho,
-      logalpha, use_gram
-    )
+    forward_loop_cpp(x, R, xx, ini.sel, G, Rho, logalpha, use_gram)
 
     # for ( j in 1:d ) {
     #   rho <- 0
