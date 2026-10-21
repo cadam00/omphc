@@ -82,11 +82,14 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       ind[sela] <- 0
       r <- R[j, ]
       i <- 2
-
+      be <- R[sela, j]
+	  
       while ( rho[i - 1] - rho[i] > tol  &  i < n ) {
         i <- i + 1
         r[sela] <- 0
-        r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+        #r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+		idx <- ind[ind > 0] 
+        r[idx] <- xx[idx, j] - xx[idx, sela, drop = FALSE] %*% be ## faster
         sel <- which.max( abs(r) )
         sela <- c(sela, sel)
         be <- try( solve( xx[sela, sela], xx[sela, j] ), silent = TRUE )
@@ -120,10 +123,13 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       ind[sela] <- 0
       r <- R[j, ]
       i <- 2
+      be <- R[sela, j]
 
       while ( rho[i] - rho[i - 1] > tol  &  i < n ) {
         i <- i + 1
-        r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+        #r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
+		idx <- ind[ind > 0] 
+        r[idx] <- xx[idx, j] - xx[idx, sela, drop = FALSE] %*% be 
         r[sela] <- 0
         sel <- which.max(abs(r))
         sela <- c(sela, sel)
