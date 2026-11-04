@@ -23,7 +23,7 @@ omphc <- function(x, skel = NULL, R = NULL, method = "pvalue", tol = 0.05, algo 
     if ( algo == "hc" ) {
       dag <- bnlearn::hc(x, blacklist = mhvale, whitelist = whitelist, score = score, restart = restart)
     } else {
-      dag <- bnlearn::tabu(x, blacklist = mhvale, whitelist = whitelist, score = score, tabu = tabu, restart = restart)
+      dag <- bnlearn::tabu(x, blacklist = mhvale, whitelist = whitelist, score = score, tabu = tabu)
     }
     score <- bnlearn::score(x = dag, data = x, type = score )
   }
