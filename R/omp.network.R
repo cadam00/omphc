@@ -135,7 +135,7 @@ omp.network <- function(x, R = NULL, method = "pvalue", tol = 0.05) {
       while ( rho[i] - rho[i - 1] > tol  &  i < n ) {
         i <- i + 1
         #r[ind] <- Rfast::eachcol.apply(x, res, indices = ind[ind > 0])
-		idx <- ind[ind > 0]
+		    idx <- ind[ind > 0]
         r[idx] <- xx[idx, j] - xx[idx, sela, drop = FALSE] %*% be
         r[sela] <- 0
         sel <- which.max(abs(r))

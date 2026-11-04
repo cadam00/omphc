@@ -34,7 +34,7 @@ The tolerance value to terminate the OMP. The significance level, a value for th
 or a percentage for the adjusted R-square.
 }
 \item{algo}{
-The scoring algorithm, either "hc" or "tabu"
+The scoring algorithm, either "hc" or "tabu".
 }
 \item{tabu}{
 An integer, the length of the tabu list used in the tabu function.
@@ -43,17 +43,18 @@ An integer, the length of the tabu list used in the tabu function.
 An integer, the number of random restarts.
 }
 \item{score}{
-A character string, the label of the network score to be used in the algorithm. If none is specified,
-the default score is the Bayesian Information Criterion for continuous data sets.
-The available score for continuous variables are: "bic-g" (default), "loglik-g", "aic-g", "bic-g" or "bge".
+A character string, the label of the network score to be used in the algorithm.
+If none is specified, the default score is the Bayesian Information Criterion for
+continuous data sets. Other available scores for continuous variables
+are: "bic-g" (default), "loglik-g", "aic-g", "bic-g" or "bge".
 }
 \item{blacklist}{
-A data frame with two columns (optionally labeled "from" and "to"), containing a set of arcs not to
-be included in the graph.
+A data frame with two columns (optionally labeled "from" and "to"), containing
+a set of arcs not to be included in the graph.
 }
 \item{whitelist}{
-A data frame with two columns (optionally labeled "from" and "to"), containing a set of arcs to be
-included in the graph.
+A data frame with two columns (optionally labeled "from" and "to"), containing
+a set of arcs to be included in the graph.
 }
 }
 
@@ -81,6 +82,9 @@ The duration of the algorithm.
 }
 
 \references{
+Tsagris M. and Adam C. (2026). The OMPHC Bayesian network learning algorithm.
+https://www.researchgate.net/profile/Michail-Tsagris/publication/416700162_The_OMPHC_Bayesian_network_learning_algorithm/links/6adb9a3b21cbf015d2a094a6/The-OMPHC-Bayesian-network-learning-algorithm.pdf
+
 Tsagris M., Papadovasilakis Z., Lakiotaki K. and Tsamardinos I. (2022). The \eqn{\gamma}-OMP
 Algorithm for Feature Selection With Application to Gene Expression Data.
 IEEE/ACM Transactions on Computational Biology and Bioinformatics, 19(2): 1214--1224.

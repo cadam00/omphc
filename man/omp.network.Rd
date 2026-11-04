@@ -59,9 +59,20 @@ The adjancency matrix. A value of 1 in G[i, j] appears in G[j, i] also, indicati
 have an edge between them.
 }
 }
+
 \references{
+Tsagris M. and Adam C. (2026). The OMPHC Bayesian network learning algorithm.
+https://www.researchgate.net/profile/Michail-Tsagris/publication/416700162_The_OMPHC_Bayesian_network_learning_algorithm/links/6adb9a3b21cbf015d2a094a6/The-OMPHC-Bayesian-network-learning-algorithm.pdf
+
+Tsagris M., Papadovasilakis Z., Lakiotaki K. and Tsamardinos I. (2022). The \eqn{\gamma}-OMP
+Algorithm for Feature Selection With Application to Gene Expression Data.
+IEEE/ACM Transactions on Computational Biology and Bioinformatics, 19(2): 1214--1224.
+
 Tsamardinos I., Brown E.L. and Aliferis F.C. (2006). The max-min hill-climbing Bayesian network
 structure learning algorithm. Machine Learning, 65(1): 31--78.
+
+Mallat S. G. and Zhang Z. (1993). Matching pursuits with time-frequency dictionaries.
+IEEE Transactions on Signal Processing, 41(12): 3397--3415.
 }
 
 \author{
